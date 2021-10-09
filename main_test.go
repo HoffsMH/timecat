@@ -1,16 +1,14 @@
 package main
 
-
-
 import (
 	"testing"
 )
 
 func TestMatchcat(t *testing.T) {
-	want := "hi";
-	result := Ok();
+	want := "hi"
+	result := "hi"
 
-	if result	 != want {
-		t.Fatalf(`Ok() = %q, %v, error`, want, result)
+	if result != want {
+		t.Fatalf(`Ok() = %T, %T, error`, want, result)
 	}
 }
