@@ -12,11 +12,25 @@ type timeRange struct {
 
 func main() {
 	root := "./testcapdir"
+	monthArg := 0
+	weekArg := 0
+	dayArg := 0
 
 	if len(os.Args) > 1 {
 		root = os.Args[1]
 	}
-	tr := &timeRange{0,0,-3}
+	if len(os.Args) > 2 {
+		monthArg = os.Args[2]
+	}
+
+	if len(os.Args) > 3 {
+		weekArg = os.Args[3]
+	}
+
+	if len(os.Args) > 4 {
+		dayArg = os.Args[4]
+	}
+	tr := &timeRange{monthArg,weekArg,dayArg}
 
 	createDateMapsFromDir(root, tr)
 }
