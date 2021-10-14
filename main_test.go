@@ -1,14 +1,18 @@
-package main
+package timecat
 
 import (
 	"testing"
+	"fmt"
 )
 
-func TestMatchcat(t *testing.T) {
-	want := "hi"
-	result := "hi"
+var testFile = `
+asuh
+ok
+`
 
-	if result != want {
-		t.Fatalf(`Ok() = %T, %T, error`, want, result)
-	}
+func TestSomething(t *testing.T) {
+	result := Split("testfile")
+	fmt.Println(result[0].Content)
+	fmt.Println(result[1].Content)
 }
+
