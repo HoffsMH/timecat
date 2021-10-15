@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"regexp"
 	"strings"
+	"path"
 	"fmt"
 )
 
@@ -20,12 +21,17 @@ type TimeRange struct {
 type FileContent struct {
 	Name string
 	Content string
+	Dir string
 }
 
 var getAbs = filepath.Abs
 var readDir = os.ReadDir
 var parseDate = dateparse.ParseAny
-var readFile = os.ReadFile
+var readFile = func (filename string) (string, error) {
+	bytes, err := os.ReadFile(filename);
+	return string(bytes), err;
+}
+var writeFile = os.WriteFile
 
 func Cat(rpath string, tr *TimeRange) string {
 	abspath, _ := getAbs(rpath)
@@ -50,7 +56,7 @@ var heading = "^!#"
 func Split(rpath string) []FileContent {
 	abspath, _ := getAbs(rpath)
 	content, _ := readFile(abspath)
-	lines := strings.Split(string(content), "\n")
+	lines := strings.Split(content, "\n")
 	var result []FileContent
 	r := regexp.MustCompile(heading + " (.*)")
 
@@ -61,14 +67,36 @@ func Split(rpath string) []FileContent {
 		if len(result) > 0 && len(match) == 0 {
 			result[0].Content += line + "\n"
 		}
-		fmt.Println(testFile)
 
 		// we found a header on the current line
 		if len(match) > 1 {
 			// start a new header
-			result = append([]FileContent{FileContent{ Name: match[1], Content: ""}}, result...)
+			result = append([]FileContent{FileContent{ Dir: abspath, Name: match[1], Content: ""}}, result...)
 		}
 	}
 
 	return result
+}
+
+func WriteSplits(fcs []FileContent) {
+	for _, fc := range fcs {
+		writeFile(path.Join(fc.Dir, fc.Name), []byte(fc.Content), 0644)
+	}
+}
+
+func TimstampString(n string) string {
+	name, err := dateparse.ParseAny(n);
+	fmt.Println("HERE IS ERR")
+	fmt.Println(err)
+
+	fmt.Println("HERE IS NAME")
+	fmt.Println(name)
+
+	fmt.Println("OUR ATTEMPT @ SLICING")
+	fmt.Println(string([]byte(n)[:10]))
+
+	if err == nil {
+		return n;
+	}
+	return time.Now().Format("2006-01-02") + "-" + n
 }
