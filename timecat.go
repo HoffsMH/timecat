@@ -1,6 +1,7 @@
 package timecat
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path"
@@ -89,30 +90,37 @@ func WriteSplits(fcs []FileContent) {
 }
 
 func TimestampString(str string) string {
-	if len(str) < 10 {
+	_, err := parseDateFileName(str)
+
+	if err != nil {
 		return appendCurrentSimpleDate(str)
 	}
-
-	datePortion := str[:10]
-	dateOutput, err := parseDate(datePortion)
-	if err == nil {
-		return str
-	}
-
-	// rfc339
-	//	2006-01-02T15:04:05Z07:00
-	if len(str) < 24 {
-		return appendCurrentSimpleDate(str)
-	}
-
-	datePortion = str[:25]
-	dateOutput, err = parseDate(datePortion)
-	if err == nil {
-		return dateOutput.Format(time.RFC3339) + "-" + str
-	}
-	return appendCurrentSimpleDate(str)
+	return str
 }
 
 func appendCurrentSimpleDate(str string) string {
 	return nowSimpleDate() + "-" + str
+}
+
+func parseDateFileName(fn string) (time.Time, error) {
+	if len(fn) < 10 {
+		return now(), errors.New("not long enough to contain a date")
+	}
+
+	datePortion := fn[:10]
+	dateOutput, err := parseDate(datePortion)
+	if err == nil {
+		return dateOutput, nil
+	}
+
+	if len(fn) < 24 {
+		return now(), errors.New("No date detected")
+	}
+
+	datePortion = fn[:25]
+	dateOutput, err = parseDate(datePortion)
+	if err == nil {
+		return dateOutput, nil
+	}
+	return now(), errors.New("No date detected")
 }
