@@ -1,37 +1,41 @@
 package timecat
 
 import (
-	"os"
-	"path/filepath"
-	"github.com/araddon/dateparse"
-	"time"
 	"io/ioutil"
+	"os"
+	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
-	"path"
-	"fmt"
+	"time"
+
+	"github.com/araddon/dateparse"
 )
 
 type TimeRange struct {
 	Months int
-	Weeks int
-	Days int
+	Weeks  int
+	Days   int
 }
 
 type FileContent struct {
-	Name string
+	Name    string
 	Content string
-	Dir string
+	Dir     string
 }
 
 var getAbs = filepath.Abs
 var readDir = os.ReadDir
 var parseDate = dateparse.ParseAny
-var readFile = func (filename string) (string, error) {
-	bytes, err := os.ReadFile(filename);
-	return string(bytes), err;
+var readFile = func(filename string) (string, error) {
+	bytes, err := os.ReadFile(filename)
+	return string(bytes), err
 }
 var writeFile = os.WriteFile
+var now = time.Now
+var nowSimpleDate = func() string {
+	return now().Format("2006-01-02")
+}
 
 func Cat(rpath string, tr *TimeRange) string {
 	abspath, _ := getAbs(rpath)
@@ -71,7 +75,7 @@ func Split(rpath string) []FileContent {
 		// we found a header on the current line
 		if len(match) > 1 {
 			// start a new header
-			result = append([]FileContent{FileContent{ Dir: abspath, Name: match[1], Content: ""}}, result...)
+			result = append([]FileContent{FileContent{Dir: abspath, Name: match[1], Content: ""}}, result...)
 		}
 	}
 
@@ -84,19 +88,31 @@ func WriteSplits(fcs []FileContent) {
 	}
 }
 
-func TimstampString(n string) string {
-	name, err := dateparse.ParseAny(n);
-	fmt.Println("HERE IS ERR")
-	fmt.Println(err)
-
-	fmt.Println("HERE IS NAME")
-	fmt.Println(name)
-
-	fmt.Println("OUR ATTEMPT @ SLICING")
-	fmt.Println(string([]byte(n)[:10]))
-
-	if err == nil {
-		return n;
+func TimestampString(str string) string {
+	if len(str) < 10 {
+		return appendCurrentSimpleDate(str)
 	}
-	return time.Now().Format("2006-01-02") + "-" + n
+
+	datePortion := str[:10]
+	dateOutput, err := parseDate(datePortion)
+	if err == nil {
+		return str
+	}
+
+	// rfc339
+	//	2006-01-02T15:04:05Z07:00
+	if len(str) < 24 {
+		return appendCurrentSimpleDate(str)
+	}
+
+	datePortion = str[:25]
+	dateOutput, err = parseDate(datePortion)
+	if err == nil {
+		return dateOutput.Format(time.RFC3339) + "-" + str
+	}
+	return appendCurrentSimpleDate(str)
+}
+
+func appendCurrentSimpleDate(str string) string {
+	return nowSimpleDate() + "-" + str
 }
