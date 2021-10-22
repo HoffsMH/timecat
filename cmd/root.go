@@ -61,6 +61,19 @@ var splitCmd = &cobra.Command{
 	},
 }
 
+var capCmd = &cobra.Command{
+	Use: "cap",
+	Short: "c",
+	Aliases: []string{"cap"},
+	Long: ``,
+	Args: cobra.MinimumNArgs(2),
+	Run: func(cmd *cobra.Command,  args []string) {
+		if len(args) > 0 {
+			timecat.Cap(args[0], args[1:])
+		}
+	},
+}
+
 func main() {
  if err := rootCmd.Execute(); err != nil {
     fmt.Println(err)
@@ -74,4 +87,5 @@ func init() {
   catCmd.Flags().IntVarP(&months, "months", "m", 0, "the amount of months to look back.(0)")
   rootCmd.AddCommand(splitCmd)
   rootCmd.AddCommand(catCmd)
+  rootCmd.AddCommand(capCmd)
 }
