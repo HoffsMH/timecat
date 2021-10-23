@@ -3,6 +3,7 @@ package timecat
 import (
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -35,7 +36,17 @@ func Split(rpath string, dir string) []FileContent {
 		}
 	}
 
-	return result
+	var finalResult []FileContent
+	for _, fc := range result {
+		r = regexp.MustCompile(".")
+		if match := r.FindStringSubmatch(fc.Content); len(match) > 0 {
+			finalResult = append(finalResult, fc)
+		} else {
+			os.Remove(filepath.Join(fc.Dir, fc.Name))
+		}
+	}
+
+	return finalResult
 }
 
 func WriteSplits(fcs []FileContent) {
