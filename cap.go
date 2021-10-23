@@ -13,6 +13,6 @@ import (
 func Cap(dir string, content []string) {
 	fileName := prependCurrentISODate("cap.md")
 	absPath, _ := getAbs(dir)
-	textContent := strings.Join(content, " ")
+	textContent := strings.Join(content, " ") + "\n"
 	writeFile(path.Join(absPath, fileName), []byte(textContent), 0644)
 }
