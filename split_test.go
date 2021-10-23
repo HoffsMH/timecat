@@ -10,7 +10,7 @@ func TestSplitWithEmptyFile(t *testing.T) {
 	mockReadFile(testFile)
 
 	// when empty file there are no results
-	result := Split("testfile")
+	result := Split("testfile", "testdir")
 
 	if len(result) != 0 {
 		t.Fatal("there was more or less than one heading")
@@ -27,7 +27,7 @@ asdf
 
 	mockReadFile(testFile)
 
-	result := Split("testfile")
+	result := Split("testfile", "testdir")
 	if len(result) > 0 {
 		t.Fatal("there were headings when there should be none")
 	}
@@ -46,7 +46,7 @@ testtext3
 
 	mockReadFile(testFile)
 
-	result := Split("testfile")
+	result := Split("testfile", "testdir")
 
 	// single file heading
 	// everything before the first heading is discarded

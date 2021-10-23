@@ -1,21 +1,21 @@
 package timecat
 
 import (
+	"os"
 	"path"
 	"regexp"
 	"strings"
-	"os"
-	"path/filepath"
 )
 
 var writeFile = os.WriteFile
 
-var plainTextHeading = "!#"
+var plainTextHeading = "##"
 var heading = "^" + plainTextHeading
 
-func Split(rpath string) []FileContent {
-	abspath, _ := getAbs(rpath)
-	content, _ := readFile(abspath)
+func Split(rpath string, dir string) []FileContent {
+	fileAbsPath, _ := getAbs(rpath)
+	dirAbsPath, _ := getAbs(dir)
+	content, _ := readFile(fileAbsPath)
 	lines := strings.Split(content, "\n")
 	var result []FileContent
 	r := regexp.MustCompile(heading + " (.*)")
@@ -31,7 +31,7 @@ func Split(rpath string) []FileContent {
 		// we found a header on the current line
 		if len(match) > 1 {
 			// start a new header
-			result = append([]FileContent{FileContent{Dir: filepath.Dir(abspath), Name: match[1], Content: ""}}, result...)
+			result = append([]FileContent{FileContent{Dir: dirAbsPath, Name: match[1], Content: ""}}, result...)
 		}
 	}
 

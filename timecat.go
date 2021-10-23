@@ -55,6 +55,7 @@ func Cat(rpath string, tr *TimeRange) string {
 			text += string(content) + "\n"
 		}
 	}
+	text += plainTextHeading + " cap.md"
 
 	return text
 }

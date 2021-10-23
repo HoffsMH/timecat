@@ -43,7 +43,7 @@ testtext3
 
 	mockReadFile(testFile)
 
-	result := Split("testfile")
+	result := Split("testfile", "testdir")
 	WriteSplits(result)
 }
 

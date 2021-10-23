@@ -52,11 +52,12 @@ var splitCmd = &cobra.Command{
 	Short: "s",
 	Aliases: []string{"s"},
 	Long: ``,
-	Args: cobra.MinimumNArgs(1),
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command,  args []string) {
 		if len(args) > 0 {
 			file := args[0]
-			timecat.WriteSplits(timecat.Split(file))
+			dir := args[1]
+			timecat.WriteSplits(timecat.Split(file, dir))
 		}
 	},
 }
