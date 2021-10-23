@@ -52,7 +52,7 @@ func Cat(rpath string, tr *TimeRange) string {
 		if t.After(time.Now().AddDate(-tr.Months, -tr.Weeks, -tr.Days)) {
 			content, _ := ioutil.ReadFile(fullPath)
 			text += plainTextHeading + " " + file.Name() + "\n"
-			text += string(content) + "\n"
+			text += string(content)
 		}
 	}
 	text += plainTextHeading + " cap.md"
