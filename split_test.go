@@ -47,7 +47,7 @@ func TestSplitWithOneHeading(t *testing.T) {
 ok
 asdf
 asdf
-` + plainTextHeading + ` testfile.md
+` + plainTextHeading + ` testfile1.md
 testtext1
 testtext2
 testtext3
@@ -79,7 +79,7 @@ testtext3
 	if result[0].Content != contentWant {
 		t.Fatalf("content was not correct: want: %s, got: %s", contentWant, result[0].Content)
 	}
-	nameWant := "test-prefix-testfile.md"
+	nameWant := "test-prefix-testfile1.md"
 
 	// and that results name matches what we see from the heading itself
 	if result[0].Name != nameWant {

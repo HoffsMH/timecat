@@ -39,7 +39,7 @@ func Split(rpath string, dir string) []FileContent {
 		// we found a header on the current line
 		if len(match) > 1 {
 			// start a new header
-			result = append([]FileContent{newFileContent(rpath, dir)}, result...)
+			result = append([]FileContent{newFileContent(match[1], dir)}, result...)
 		}
 	}
 	return pruneEmptyFileContents(result)
