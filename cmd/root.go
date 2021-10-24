@@ -83,7 +83,7 @@ func main() {
 }
 
 func init() {
-  catCmd.Flags().IntVarP(&days, "days", "d", 1, "the amount of days to look back.(1)")
+  catCmd.Flags().IntVarP(&days, "days", "d", 2, "the amount of days to look back.(1)")
   catCmd.Flags().IntVarP(&weeks, "weeks", "w", 0, "the amount of weeks to look back.(0)")
   catCmd.Flags().IntVarP(&months, "months", "m", 0, "the amount of months to look back.(0)")
   rootCmd.AddCommand(splitCmd)
