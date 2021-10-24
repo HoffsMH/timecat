@@ -1,11 +1,11 @@
 package timecat
 
-func mockReadFile(result string, err error) func(string) (string, error) {
-	oldReadFile := readFile
-	readFile = func(filename string) (string, error) {
-		return result, err
-	}
-	return oldReadFile
+import "time"
+
+func mockReadFile(f func(string) (string, error)) func(string) (string, error) {
+	old := readFile
+	readFile = f
+	return old
 }
 
 type mockTime struct {
@@ -21,5 +21,19 @@ func mockNowISODate(result string) func() string {
 	nowISODate = func() string {
 		return result
 	}
+	return old
+}
+
+func mockReadDir(result []string) func(string) []string {
+	old := readDir
+	readDir = func(str string) []string {
+		return result
+	}
+	return old
+}
+
+func mockNow(f func() time.Time) func() time.Time {
+	old := now
+	now =  f
 	return old
 }

@@ -7,7 +7,9 @@ import (
 func TestSplitWithEmptyFile(t *testing.T) {
 	var testFile = ``
 
-	oldReadFile := mockReadFile(testFile, nil)
+	oldReadFile := mockReadFile(func(f string) (string, error) {
+		return testFile, nil
+	})
 	defer func() { readFile = oldReadFile }()
 
 	// when split is run with a completely empty file
@@ -27,7 +29,9 @@ asdf
 
 `
 
-	oldReadFile := mockReadFile(testFile, nil)
+	oldReadFile := mockReadFile(func(f string) (string, error) {
+		return testFile, nil
+	})
 	defer func() { readFile = oldReadFile }()
 
 	// when split is run with a file that doens't have a single heading
@@ -49,7 +53,9 @@ testtext2
 testtext3
 `
 
-	oldReadFile := mockReadFile(testFile, nil)
+	oldReadFile := mockReadFile(func(f string) (string, error) {
+		return testFile, nil
+	})
 	defer func() { readFile = oldReadFile }()
 
 	oldNowISODate := mockNowISODate("test-prefix")

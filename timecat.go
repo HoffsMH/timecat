@@ -2,9 +2,9 @@ package timecat
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
 
 	"github.com/araddon/dateparse"
@@ -23,7 +23,16 @@ type FileContent struct {
 }
 
 var getAbs = filepath.Abs
-var readDir = os.ReadDir
+var readDir = func(dirname string) []string {
+	dirs, _ := os.ReadDir(dirname)
+	var result []string
+
+	for _, file := range dirs {
+		result = append(result, file.Name())
+	}
+
+	return result
+}
 var parseDate = dateparse.ParseAny
 var readFile = func(filename string) (string, error) {
 	bytes, err := os.ReadFile(filename)
@@ -33,25 +42,33 @@ var now = time.Now
 
 func Cat(rpath string, tr *TimeRange) string {
 	abspath, _ := getAbs(rpath)
-	dirs, _ := readDir(abspath)
+	files := readDir(abspath)
 	text := ""
 
-	for _, file := range dirs {
-		t, err := parseDateFileName(file.Name())
+	for _, file := range files {
+		t, err := parseDateFileName(file)
 		if err != nil {
 			continue
 		}
-		fullPath := filepath.Join(abspath, file.Name())
+		fullPath := filepath.Join(abspath, file)
 
-		if t.After(time.Now().AddDate(-tr.Months, -tr.Weeks, -tr.Days)) {
-			content, _ := ioutil.ReadFile(fullPath)
-			text += plainTextHeading + " " + file.Name() + "\n"
-			text += string(content)
+		if t.After(now().AddDate(-tr.Months, -tr.Weeks, -tr.Days)) {
+			content, _ := readFile(fullPath)
+			text += plainTextHeading + " " + file + "\n"
+			text += ensureNewline(string(content))
 		}
 	}
-	text += plainTextHeading + " cap.md"
+	text += plainTextHeading + " cap.md\n"
 
 	return text
+}
+
+func ensureNewline(s string) string {
+	match, _ := regexp.MatchString("\n$", s)
+	if match == true {
+		return s
+	}
+	return s + "\n"
 }
 
 func parseDateFileName(fn string) (time.Time, error) {
