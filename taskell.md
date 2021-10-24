@@ -1,6 +1,6 @@
 ## To Do
 
-- timecat -> timecap
+- test empty heading deletes the file
 
 ## Doing
 

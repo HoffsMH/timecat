@@ -3,9 +3,10 @@ package timecat
 import (
 	"errors"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"time"
-	"os"
+
 	"github.com/araddon/dateparse"
 )
 
@@ -29,13 +30,6 @@ var readFile = func(filename string) (string, error) {
 	return string(bytes), err
 }
 var now = time.Now
-var nowSimpleDate = func() string {
-	return now().Format("2006-01-02")
-}
-
-var nowISODate = func() string {
-	return now().Format(time.RFC3339)
-}
 
 func Cat(rpath string, tr *TimeRange) string {
 	abspath, _ := getAbs(rpath)
@@ -58,23 +52,6 @@ func Cat(rpath string, tr *TimeRange) string {
 	text += plainTextHeading + " cap.md"
 
 	return text
-}
-
-func TimestampString(str string) string {
-	_, err := parseDateFileName(str)
-
-	if err != nil {
-		return prependCurrentSimpleDate(str)
-	}
-	return str
-}
-
-func prependCurrentSimpleDate(str string) string {
-	return nowSimpleDate() + "-" + str
-}
-
-func prependCurrentISODate(str string) string {
-	return nowISODate() + "-" + str
 }
 
 func parseDateFileName(fn string) (time.Time, error) {

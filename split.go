@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
 
 var writeFile = os.WriteFile
@@ -13,11 +14,17 @@ var writeFile = os.WriteFile
 var plainTextHeading = "##"
 var heading = "^" + plainTextHeading
 
+var nowISODate = func() string {
+	return now().Format(time.RFC3339)
+}
+
+func prependCurrentISODate(str string) string {
+	return nowISODate() + "-" + str
+}
+
 func Split(rpath string, dir string) []FileContent {
-	fileAbsPath, _ := getAbs(rpath)
-	dirAbsPath, _ := getAbs(dir)
-	content, _ := readFile(fileAbsPath)
-	lines := strings.Split(content, "\n")
+	lines := getLines(rpath)
+
 	var result []FileContent
 	r := regexp.MustCompile(heading + " (.*)")
 
@@ -32,30 +39,48 @@ func Split(rpath string, dir string) []FileContent {
 		// we found a header on the current line
 		if len(match) > 1 {
 			// start a new header
-			result = append([]FileContent{FileContent{Dir: dirAbsPath, Name: match[1], Content: ""}}, result...)
+			result = append([]FileContent{newFileContent(rpath, dir)}, result...)
 		}
 	}
+	return pruneEmptyFileContents(result)
+}
 
-	var finalResult []FileContent
-	for _, fc := range result {
-		r = regexp.MustCompile(".")
+func pruneEmptyFileContents(fcs []FileContent) []FileContent {
+	var pruned []FileContent
+	r := regexp.MustCompile(".")
+
+	for _, fc := range fcs {
 		if match := r.FindStringSubmatch(fc.Content); len(match) > 0 {
-			finalResult = append(finalResult, fc)
+			pruned = append(pruned, fc)
 		} else {
 			os.Remove(filepath.Join(fc.Dir, fc.Name))
 		}
 	}
 
-	return finalResult
+	return pruned
+}
+
+func getLines(path string) []string {
+	absPath, _ := getAbs(path)
+	text, _ := readFile(absPath)
+	return strings.Split(text, "\n")
+}
+
+func newFileContent(name string, dir string) FileContent {
+	dir, _ = getAbs(dir)
+	if _, err := parseDateFileName(name); err != nil {
+		name = prependCurrentISODate(name)
+	}
+
+	return FileContent{
+		Dir:     dir,
+		Name:    path.Base(name),
+		Content: "",
+	}
 }
 
 func WriteSplits(fcs []FileContent) {
 	for _, fc := range fcs {
-		fileName := fc.Name
-		if _, err := parseDateFileName(fc.Name); err != nil {
-			fileName = prependCurrentISODate(fc.Name)
-		}
-
-		writeFile(path.Join(fc.Dir, fileName), []byte(fc.Content), 0644)
+		writeFile(path.Join(fc.Dir, fc.Name), []byte(fc.Content), 0644)
 	}
 }
