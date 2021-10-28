@@ -3,6 +3,7 @@ package timecat
 import (
 	"testing"
 	"time"
+ . "github.com/smartystreets/goconvey/convey"
 )
 
 func TestCatWithNoFilesWhatsoever(t *testing.T) {
@@ -139,4 +140,53 @@ func TestEnsureNewline(t *testing.T) {
 	if got != want {
 		t.Fatalf("not correct: want: %s, got: %s", want, got)
 	}
+}
+
+func TestFilterFileNames(t *testing.T) {
+
+	Convey("Given an empty array", t, func() {
+		testFileNames := []string{}
+
+		Convey("And searching for empty text", func() {
+			got := filterFiles(testFileNames, "")
+			So(len(got), ShouldEqual, 0)
+		})
+
+		Convey("And given non empty search text", func() {
+			got := filterFiles(testFileNames, "")
+
+			So(len(got), ShouldEqual, 0)
+		})
+	})
+
+	Convey("Given a full array with some of the searched for text", t, func() {
+		testFileNames := []string{
+			"thisFileName",
+			"2023-01-01-searchtext.md",
+			"thisFileName1",
+			"2021-01-01-searchtext.md",
+			"thatFileName1",
+		}
+		Convey("And some of the text is searched for", func() {
+			want := []string{
+				"2023-01-01-searchtext.md",
+				"2021-01-01-searchtext.md",
+			}
+
+			got := filterFiles(testFileNames, "searchtext")
+
+			So(got, ShouldContain, want[0])
+			So(got, ShouldContain, want[1])
+			So(got, ShouldNotContain, testFileNames[0])
+			So(got, ShouldNotContain, testFileNames[2])
+			So(got, ShouldNotContain, testFileNames[4])
+		})
+		Convey("And none of the text is searched for", func() {
+			got := filterFiles(testFileNames, "asdfg")
+
+			for _, filename := range testFileNames {
+				So(got, ShouldNotContain, filename)
+			}
+		})
+	})
 }

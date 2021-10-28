@@ -71,6 +71,17 @@ func ensureNewline(s string) string {
 	return s + "\n"
 }
 
+func filterFiles(filenames []string, searchtext string) []string {
+	var result []string
+	for _, f := range filenames {
+		match, _ := regexp.MatchString(searchtext, f)
+		if match == true {
+			result = append(result, f)
+		}
+	}
+	return result
+}
+
 func parseDateFileName(fn string) (time.Time, error) {
 	if len(fn) < 10 {
 		return now(), errors.New("not long enough to contain a date")
