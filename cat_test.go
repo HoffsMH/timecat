@@ -3,91 +3,76 @@ package timecat
 import (
 	"testing"
 	"time"
- . "github.com/smartystreets/goconvey/convey"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestCatWithNoFilesWhatsoever(t *testing.T) {
-	var testDirContents = []string{}
+func TestCat(t *testing.T) {
+	Convey("Time is frozen at 2021-10-24T11:21:23-05:00", t, func() {
+		freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-24T11:21:23-05:00")
+		oldNow := mockNow(func() time.Time { return freeze })
+		Reset(func() { now = oldNow })
 
-	oldReadDir := mockReadDir(testDirContents)
-	defer func() { readDir = oldReadDir }()
+		Convey("When Given an empty Directory", func() {
+			var testDirContents = []string{}
+			oldReadDir := mockReadDir(testDirContents)
+			Reset(func() { readDir = oldReadDir })
 
-	freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-24T11:21:23-05:00")
+			Convey("Should just have the cap heading", func() {
+				oldReadFile := mockReadFile(func(f string) (string, error) {
+					return "should not see this text anywhere in got", nil
+				})
+				defer func() { readFile = oldReadFile }()
 
-	oldNow := mockNow(func() time.Time {
-		return freeze
+				got := Cat("testdir", &TimeRange{0, 0, 0})
+				want := "## cap.md\n"
+
+				So(got, ShouldEqual, want)
+			})
+		})
+
+		Convey("When given a non empty directory but no dated files", func() {
+			var testDirContents = []string{
+				"testfile",
+				"testfile2",
+			}
+			oldReadDir := mockReadDir(testDirContents)
+			Reset(func() { readDir = oldReadDir })
+
+			Convey("Should just have the cap heading", func() {
+				oldReadFile := mockReadFile(func(f string) (string, error) {
+					return "should not see this text anywhere in got", nil
+				})
+				defer func() { readFile = oldReadFile }()
+
+				got := Cat("testdir", &TimeRange{0, 0, 0})
+				want := "## cap.md\n"
+
+				So(got, ShouldEqual, want)
+			})
+		})
+		Convey("When given a dir containing a dated file but date is out of range", func() {
+			var testDirContents = []string{
+				"testfile",
+				"testfile2",
+				"2021-10-23T11:21:23-05:00-cap.md",
+			}
+			oldReadDir := mockReadDir(testDirContents)
+			Reset(func() { readDir = oldReadDir })
+
+			Convey("Should just have the cap heading", func() {
+				oldReadFile := mockReadFile(func(f string) (string, error) {
+					return "should not see this text anywhere in got", nil
+				})
+				defer func() { readFile = oldReadFile }()
+
+				got := Cat("testdir", &TimeRange{0, 0, 0})
+				want := "## cap.md\n"
+
+				So(got, ShouldEqual, want)
+			})
+		})
 	})
-	defer func() { now = oldNow }()
-
-	oldReadFile := mockReadFile(func(f string) (string, error) {
-		return "should not see this text anywhere in got", nil
-	})
-	defer func() { readFile = oldReadFile }()
-
-	got := Cat("testdir", &TimeRange{0, 0, 0})
-	want := "## cap.md\n"
-
-	// no files in given directory should just have the default heading
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
-}
-
-func TestCatWithNoDatedFiles(t *testing.T) {
-	var testDirContents = []string{
-		"testfile",
-		"testfile2",
-	}
-
-	oldReadDir := mockReadDir(testDirContents)
-	defer func() { readDir = oldReadDir }()
-
-	freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-24T11:21:23-05:00")
-
-	oldNow := mockNow(func() time.Time {
-		return freeze
-	})
-	defer func() { now = oldNow }()
-
-	oldReadFile := mockReadFile(func(f string) (string, error) {
-		return "should not see this text anywhere in got", nil
-	})
-	defer func() { readFile = oldReadFile }()
-
-	got := Cat("testdir", &TimeRange{0, 0, 0})
-	want := "## cap.md\n"
-
-	// no dated files in given directory should just have the default heading
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
-}
-
-func TestCatWithOutOfRangeDate(t *testing.T) {
-	var testDirContents = []string{
-		"testfile",
-		"testfile2",
-		"2021-10-27T11:21:23-05:00-cap.md",
-	}
-
-	oldReadDir := mockReadDir(testDirContents)
-	defer func() { readDir = oldReadDir }()
-
-	freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-28T11:21:23-05:00")
-
-	oldNow := mockNow(func() time.Time {
-		return freeze
-	})
-	defer func() { now = oldNow }()
-
-	got := Cat("testdir", &TimeRange{0, 0, 0})
-	want := "## cap.md\n"
-
-	// one dated file in the directory with SOME non dated but the date is not
-	// in range
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
 }
 
 func TestCatWithOneInRange(t *testing.T) {
