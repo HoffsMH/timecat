@@ -7,6 +7,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+
 func TestCat(t *testing.T) {
 	Convey("Time is frozen at 2021-10-24T11:21:23-05:00", t, func() {
 		freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-24T11:21:23-05:00")
@@ -19,15 +20,7 @@ func TestCat(t *testing.T) {
 			Reset(func() { readDir = oldReadDir })
 
 			Convey("Should just have the cap heading", func() {
-				oldReadFile := mockReadFile(func(f string) (string, error) {
-					return "should not see this text anywhere in got", nil
-				})
-				defer func() { readFile = oldReadFile }()
-
-				got := Cat("testdir", &TimeRange{0, 0, 0})
-				want := "## cap.md\n"
-
-				So(got, ShouldEqual, want)
+				assertCapOnly()
 			})
 		})
 
@@ -40,15 +33,7 @@ func TestCat(t *testing.T) {
 			Reset(func() { readDir = oldReadDir })
 
 			Convey("Should just have the cap heading", func() {
-				oldReadFile := mockReadFile(func(f string) (string, error) {
-					return "should not see this text anywhere in got", nil
-				})
-				defer func() { readFile = oldReadFile }()
-
-				got := Cat("testdir", &TimeRange{0, 0, 0})
-				want := "## cap.md\n"
-
-				So(got, ShouldEqual, want)
+				assertCapOnly()
 			})
 		})
 		Convey("When given a dir containing a dated file but date is out of range", func() {
@@ -61,15 +46,7 @@ func TestCat(t *testing.T) {
 			Reset(func() { readDir = oldReadDir })
 
 			Convey("Should just have the cap heading", func() {
-				oldReadFile := mockReadFile(func(f string) (string, error) {
-					return "should not see this text anywhere in got", nil
-				})
-				defer func() { readFile = oldReadFile }()
-
-				got := Cat("testdir", &TimeRange{0, 0, 0})
-				want := "## cap.md\n"
-
-				So(got, ShouldEqual, want)
+				assertCapOnly()
 			})
 		})
 	})
@@ -174,4 +151,16 @@ func TestFilterFileNames(t *testing.T) {
 			}
 		})
 	})
+}
+
+func assertCapOnly() {
+	oldReadFile := mockReadFile(func(f string) (string, error) {
+		return "should not see this text anywhere in got", nil
+	})
+	defer func() { readFile = oldReadFile }()
+
+	got := Cat("testdir", &TimeRange{0, 0, 0})
+	want := "## cap.md\n"
+
+	So(got, ShouldEqual, want)
 }
