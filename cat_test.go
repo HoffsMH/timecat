@@ -49,63 +49,66 @@ func TestCat(t *testing.T) {
 				assertCapOnly()
 			})
 		})
-	})
-}
+		Convey("When given a dir containing multiple dated files and some are in the given range", func() {
+			var testDirContents = []string{
+				"testfile",
+				"testfile2",
+				"2021-09-27T11:21:23-05:00-cap.md",
+				"2021-10-23T11:21:23-05:00-cap.md",
+			}
+			oldReadDir := mockReadDir(testDirContents)
+			Reset(func() { readDir = oldReadDir })
+			Convey("Should return a heading and content for the file thats in range", func() {
 
-func TestCatWithOneInRange(t *testing.T) {
-	var testDirContents = []string{
-		"testfile",
-		"testfile2",
-		"2021-09-27T11:21:23-05:00-cap.md",
-		"2021-10-27T11:21:23-05:00-cap.md",
-	}
+				fileContent := `we should see this text`
+				oldReadFile := mockReadFile(func(f string) (string, error) {
+					return fileContent, nil
+				})
+				defer func() { readFile = oldReadFile }()
 
-	oldReadDir := mockReadDir(testDirContents)
-	defer func() { readDir = oldReadDir }()
-
-	freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-28T11:21:23-05:00")
-
-	oldNow := mockNow(func() time.Time {
-		return freeze
-	})
-	defer func() { now = oldNow }()
-
-	fileContent := `we should see this text`
-	oldReadFile := mockReadFile(func(f string) (string, error) {
-		return fileContent, nil
-	})
-	defer func() { readFile = oldReadFile }()
-
-	got := Cat("testdir", &TimeRange{0, 0, 2})
-	want := `## 2021-10-27T11:21:23-05:00-cap.md
+				got := Cat("testdir", &TimeRange{0, 0, 2})
+				want := `## 2021-10-23T11:21:23-05:00-cap.md
 ` + fileContent + `
 ## cap.md
 `
-
-	// one dated file in the directory with SOME non dated but the date is not
-	// in range
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
+				So(got, ShouldEqual, want)
+			})
+		})
+	})
 }
 
 func TestEnsureNewline(t *testing.T) {
-	got := ensureNewline("hello")
-	want := "hello\n"
+	Convey("when given a string that doesn't end in newline", t, func() {
+		input := "hello"
 
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
+		Convey("Should add a newline", func() {
+				want := "hello\n"
+				got := ensureNewline(input)
 
-	got = ensureNewline("hello\n")
+				So(got, ShouldEqual, want)
+		})
+	})
+	Convey("when given a string that ends in a newline", t, func() {
+		input := "hello\n"
 
-	if got != want {
-		t.Fatalf("not correct: want: %s, got: %s", want, got)
-	}
+		Convey("string shouldn't change", func() {
+				got := ensureNewline(input)
+
+				So(got, ShouldEqual, input)
+		})
+	})
+	Convey("when given s tring that has a newline somewhere in middle", t, func() {
+		input := "hel\nlo"
+		Convey("Should add a newline", func() {
+				want := "hel\nlo\n"
+				got := ensureNewline(input)
+
+				So(got, ShouldEqual, want)
+		})
+	})
 }
 
 func TestFilterFileNames(t *testing.T) {
-
 	Convey("Given an empty array", t, func() {
 		testFileNames := []string{}
 
