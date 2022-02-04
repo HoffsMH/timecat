@@ -1,6 +1,7 @@
 package timecat
 
 import (
+	"fmt"
 	"path"
 	"strings"
 )
@@ -15,4 +16,5 @@ func Cap(dir string, content []string) {
 	absPath, _ := getAbs(dir)
 	textContent := strings.Join(content, " ") + "\n"
 	writeFile(path.Join(absPath, fileName), []byte(textContent), 0644)
+	fmt.Println(path.Join(absPath, fileName))
 }

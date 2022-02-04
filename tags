@@ -1,0 +1,73 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/hoffs/code/fun/timecat/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210905.0/
+Cap	cap.go	/^func Cap(dir string, content []string) {$/;"	f	package:timecat
+Cat	timecat.go	/^func Cat(rpath string, tr *TimeRange) string {$/;"	f	package:timecat	typeref:typename:string
+Content	timecat.go	/^	Content string$/;"	m	struct:timecat.FileContent	typeref:typename:string
+Days	timecat.go	/^	Days   int$/;"	m	struct:timecat.TimeRange	typeref:typename:int
+Dir	timecat.go	/^	Dir     string$/;"	m	struct:timecat.FileContent	typeref:typename:string
+Doing	taskell.md	/^## Doing$/;"	s
+Done	taskell.md	/^## Done$/;"	s
+FileContent	timecat.go	/^type FileContent struct {$/;"	s	package:timecat
+Format	mocks.go	/^func (mt *mockTime) Format(str string) string {$/;"	f	struct:timecat.mockTime	typeref:typename:string
+Months	timecat.go	/^	Months int$/;"	m	struct:timecat.TimeRange	typeref:typename:int
+Name	timecat.go	/^	Name    string$/;"	m	struct:timecat.FileContent	typeref:typename:string
+Split	split.go	/^func Split(rpath string, dir string) []FileContent {$/;"	f	package:timecat	typeref:typename:[]FileContent
+TestCat	cat_test.go	/^func TestCat(t *testing.T) {$/;"	f	package:timecat
+TestEnsureNewline	cat_test.go	/^func TestEnsureNewline(t *testing.T) {$/;"	f	package:timecat
+TestFilterFileNames	cat_test.go	/^func TestFilterFileNames(t *testing.T) {$/;"	f	package:timecat
+TestSplitWithEmptyFile	split_test.go	/^func TestSplitWithEmptyFile(t *testing.T) {$/;"	f	package:timecat
+TestSplitWithNoHeadings	split_test.go	/^func TestSplitWithNoHeadings(t *testing.T) {$/;"	f	package:timecat
+TestSplitWithOneHeading	split_test.go	/^func TestSplitWithOneHeading(t *testing.T) {$/;"	f	package:timecat
+TimeRange	timecat.go	/^type TimeRange struct {$/;"	s	package:timecat
+To Do	taskell.md	/^## To Do$/;"	s
+Weeks	timecat.go	/^	Weeks  int$/;"	m	struct:timecat.TimeRange	typeref:typename:int
+WriteSplits	split.go	/^func WriteSplits(fcs []FileContent) {$/;"	f	package:timecat
+assertCapOnly	cat_test.go	/^func assertCapOnly() {$/;"	f	package:timecat
+capCmd	cmd/root.go	/^var capCmd = &cobra.Command{$/;"	v	package:main
+catCmd	cmd/root.go	/^var catCmd = &cobra.Command{$/;"	v	package:main
+days	cmd/root.go	/^var days int$/;"	v	package:main	typeref:typename:int
+dir	cmd/root.go	/^var dir string$/;"	v	package:main	typeref:typename:string
+ensureNewline	timecat.go	/^func ensureNewline(s string) string {$/;"	f	package:timecat	typeref:typename:string
+filterFiles	timecat.go	/^func filterFiles(filenames []string, searchtext string) []string {$/;"	f	package:timecat	typeref:typename:[]string
+getAbs	timecat.go	/^var getAbs = filepath.Abs$/;"	v	package:timecat
+getLines	split.go	/^func getLines(path string) []string {$/;"	f	package:timecat	typeref:typename:[]string
+heading	split.go	/^var heading = "^" + plainTextHeading$/;"	v	package:timecat
+init	cmd/root.go	/^func init() {$/;"	f	package:main
+main	cmd/root.go	/^func main() {$/;"	f	package:main
+main	cmd/root.go	/^package main$/;"	p
+mockNow	mocks.go	/^func mockNow(f func() time.Time) func() time.Time {$/;"	f	package:timecat	typeref:typename:func() time.Time
+mockNowISODate	mocks.go	/^func mockNowISODate(result string) func() string {$/;"	f	package:timecat	typeref:typename:func() string
+mockReadDir	mocks.go	/^func mockReadDir(result []string) func(string) []string {$/;"	f	package:timecat	typeref:typename:func(string) []string
+mockReadFile	mocks.go	/^func mockReadFile(f func(string) (string, error)) func(string) (string, error) {$/;"	f	package:timecat	typeref:typename:func(string) (string, error)
+mockTime	mocks.go	/^type mockTime struct {$/;"	s	package:timecat
+months	cmd/root.go	/^var months int$/;"	v	package:main	typeref:typename:int
+newFileContent	split.go	/^func newFileContent(name string, dir string) FileContent {$/;"	f	package:timecat	typeref:typename:FileContent
+now	timecat.go	/^var now = time.Now$/;"	v	package:timecat
+nowISODate	split.go	/^var nowISODate = func() string {$/;"	v	package:timecat
+parseDate	timecat.go	/^var parseDate = dateparse.ParseAny$/;"	v	package:timecat
+parseDateFileName	timecat.go	/^func parseDateFileName(fn string) (time.Time, error) {$/;"	f	package:timecat	typeref:typename:(time.Time, error)
+plainTextHeading	split.go	/^var plainTextHeading = "##"$/;"	v	package:timecat
+prependCurrentISODate	split.go	/^func prependCurrentISODate(str string) string {$/;"	f	package:timecat	typeref:typename:string
+pruneEmptyFileContents	split.go	/^func pruneEmptyFileContents(fcs []FileContent) []FileContent {$/;"	f	package:timecat	typeref:typename:[]FileContent
+readDir	timecat.go	/^var readDir = func(dirname string) []string {$/;"	v	package:timecat
+readFile	timecat.go	/^var readFile = func(filename string) (string, error) {$/;"	v	package:timecat
+rootCmd	cmd/root.go	/^var rootCmd = &cobra.Command{$/;"	v	package:main
+splitCmd	cmd/root.go	/^var splitCmd = &cobra.Command{$/;"	v	package:main
+time	mocks.go	/^	time string$/;"	m	struct:timecat.mockTime	typeref:typename:string
+timecat	cap.go	/^package timecat$/;"	p
+timecat	cat_test.go	/^package timecat$/;"	p
+timecat	mocks.go	/^package timecat$/;"	p
+timecat	split.go	/^package timecat$/;"	p
+timecat	split_test.go	/^package timecat$/;"	p
+timecat	timecat.go	/^package timecat$/;"	p
+weeks	cmd/root.go	/^var weeks int$/;"	v	package:main	typeref:typename:int
+writeFile	split.go	/^var writeFile = os.WriteFile$/;"	v	package:timecat
