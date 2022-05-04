@@ -13,7 +13,7 @@ var months int
 var dir string
 
 var rootCmd = &cobra.Command{
-	Use: "timefile",
+	Use: "timecat",
 }
 
 var catCmd = &cobra.Command{
