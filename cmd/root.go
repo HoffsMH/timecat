@@ -36,7 +36,7 @@ Given this:
 Try this:
 	timecat --months 1000 somedir`,
 
-	Aliases: []string{"c"},
+	Aliases: []string{"ct"},
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command,  args []string) {
 		dir = "."
@@ -65,7 +65,7 @@ var splitCmd = &cobra.Command{
 var capCmd = &cobra.Command{
 	Use: "cap",
 	Short: "c",
-	Aliases: []string{"cap"},
+	Aliases: []string{"cap", "c"},
 	Long: ``,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command,  args []string) {

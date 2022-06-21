@@ -19,7 +19,7 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/rivo/uniseg v0.1.0 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
-	github.com/smartystreets/goconvey v1.7.0 // indirect
+	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/cobra v1.2.1 // indirect

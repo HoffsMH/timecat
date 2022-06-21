@@ -22,6 +22,7 @@ type FileContent struct {
 	Dir     string
 }
 
+var writeFile = os.WriteFile
 var getAbs = filepath.Abs
 var readDir = func(dirname string) []string {
 	dirs, _ := os.ReadDir(dirname)

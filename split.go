@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-var writeFile = os.WriteFile
-
 var plainTextHeading = "##"
 var heading = "^" + plainTextHeading
 
