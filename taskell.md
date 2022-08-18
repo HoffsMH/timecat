@@ -12,6 +12,7 @@
 - filtering out all links to show notes
 - filtering to only get links
 - filtering to only get one line files
+- cap can match patterns and certain patterns can change the resulting filename
 
 ## Doing
 

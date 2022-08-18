@@ -7,7 +7,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-
 func TestCat(t *testing.T) {
 	Convey("Time is frozen at 2021-10-24T11:21:23-05:00", t, func() {
 		freeze, _ := time.Parse("2006-01-02T15:04:05Z07:00", "2021-10-24T11:21:23-05:00")
@@ -82,28 +81,28 @@ func TestEnsureNewline(t *testing.T) {
 		input := "hello"
 
 		Convey("Should add a newline", func() {
-				want := "hello\n"
-				got := ensureNewline(input)
+			want := "hello\n"
+			got := ensureNewline(input)
 
-				So(got, ShouldEqual, want)
+			So(got, ShouldEqual, want)
 		})
 	})
 	Convey("when given a string that ends in a newline", t, func() {
 		input := "hello\n"
 
 		Convey("string shouldn't change", func() {
-				got := ensureNewline(input)
+			got := ensureNewline(input)
 
-				So(got, ShouldEqual, input)
+			So(got, ShouldEqual, input)
 		})
 	})
 	Convey("when given s tring that has a newline somewhere in middle", t, func() {
 		input := "hel\nlo"
 		Convey("Should add a newline", func() {
-				want := "hel\nlo\n"
-				got := ensureNewline(input)
+			want := "hel\nlo\n"
+			got := ensureNewline(input)
 
-				So(got, ShouldEqual, want)
+			So(got, ShouldEqual, want)
 		})
 	})
 }

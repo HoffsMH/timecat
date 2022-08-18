@@ -34,6 +34,6 @@ func mockReadDir(result []string) func(string) []string {
 
 func mockNow(f func() time.Time) func() time.Time {
 	old := now
-	now =  f
+	now = f
 	return old
 }
